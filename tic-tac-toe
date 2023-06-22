@@ -1,0 +1,636 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+void input(int arr[][3], int *player);
+void disply(int, int, int arr[][3]);
+void check(int arr[][3], int *p);
+void autoIn1(int arr[][3]);
+void autoIn2(int arr[][3]);
+void muallif();
+int main()
+{
+	while(1)
+	{
+		int menu=8, mcont=0;
+		while(menu<0||menu>2)
+		{
+			system("clear");
+			printf("    ~~~~~~~~~~~~~~~~~Tic Tac Toe~~~~~~~~~~~~~~~~~\n   {\t\t\t\t\t\t\t\t\t\t\t}\n");
+			printf("\t\t1️⃣   -o'yini boshlash \n\t\t2️⃣   -muallifdan 🗣 \n\t\t0️⃣   -chiqish \n\n");
+			(mcont)?printf("Xatolik iltimos qaytdan urunib ko'ring: "):0;
+			scanf("%i", &menu);
+			mcont=1;
+		}
+		if(menu==2)
+		{
+			muallif();
+			continue;
+		}
+		else if(menu==0)
+			break;
+		int arr[3][3]={{0,0,0},{0,0,0},{0,0,0}};
+		int player = 1, c=1, mono=0, daraja=0;
+		while(mono<1||mono>3)
+		{
+			system("clear");
+			printf("    ~~~~~~~~~~~~~~~~~Tic Tac Toe~~~~~~~~~~~~~~~~~\n   {\t\t\t\t\t\t\t\t\t\t\t}\n");
+			printf("\t\t1️⃣   -kompyuter bilan 👤\n\t\t2️⃣   -o'zaro o'yin 👥\n\t\t3️⃣   -ortga 👣\n\n");
+			if(mono)
+				printf("Xatolik iltimos qaytdan urunib ko'ring: ");
+			scanf("%i", &mono);
+			while(mono==1&&(daraja<1||daraja>3))
+			{
+				system("clear");
+				printf("    ~~~~~~~~~~~~~~~~~Tic Tac Toe~~~~~~~~~~~~~~~~~\n   {\t\t\t\t\t\t\t\t\t\t\t}\n");
+				printf("\t\t1️⃣   -oddiy\n\t\t2️⃣   -murakkab \n\t\t3️⃣   -ortga \n\n");
+				if(daraja)
+					printf("Xatolik iltimos qaytdan urunib ko'ring: ");
+				scanf("%i", &daraja);
+			}
+			if(daraja==3)
+				daraja=mono=0;
+		}
+		if(mono==3)
+			continue;
+		while(c&&c!=5)
+		{
+			system("clear");
+			disply(11, 11, arr);
+			if(mono-2&&player==2)
+			{
+				sleep(1);
+				if(daraja==1)
+					autoIn1(arr);
+				else
+					autoIn2(arr);
+				check(arr, &c);
+				player=1;
+				continue;
+			}
+			input(arr, &player);
+			check(arr, &c);
+		}
+		system("clear");
+		disply(11, 11, arr);
+		if(c==5)
+		{
+			printf("Durrang!\n");
+			return 0;
+		}
+		if(!(mono-11&&player-1))
+		{
+			printf("\tYomon natija ham yaxshi tajriba bo'la oladi!\n\tKeyingi sasfar uchun omad tilab qolaman 🙂\n\n");
+			return 0;
+		}
+		printf("🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉\n");
+		printf("🎉\t\t\t\t\t  🎉\n");
+		printf("🎉    Tabriklaymiz %i - o'yinchi g'olib    🎉\n", (player==1)?2:1);
+		printf("🎉\t\t\t\t\t  🎉\n");
+		printf("🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉\n");
+		return 0;
+		
+		
+	}
+}
+void input(int arr[][3], int *player)
+{
+	int x, y, c=1, j;
+	printf("Player %i! joylashuvni kiriting: ", *player);
+	while(c)
+	{	
+		while(c)
+		{
+			if(c==2)
+				printf("Xatolik iltimos qaytdan urunib ko'ring: ");
+			scanf("%i", &j);
+			if(j>9&&j<0)
+			{
+				c=2;
+				continue;
+			}
+			break;
+		}
+		switch(j)
+		{
+			case 1: x=0, y=0; break;
+			case 2: x=0, y=1; break;
+			case 3: x=0, y=2; break;
+			case 4: x=1, y=0; break;
+			case 5: x=1, y=1; break;
+			case 6: x=1, y=2; break;
+			case 7: x=2, y=0; break;
+			case 8: x=2, y=1; break;
+			case 9: x=2, y=2; break;
+		}
+		if(*player==1)
+			if(arr[x][y]!=-1&&arr[x][y]!=1)
+			{
+				arr[x][y]=1;
+				*player=2;
+				c=0;
+			}
+			else
+				c=2;
+		else if(arr[x][y]!=-1&&arr[x][y]!=1)
+		{
+			arr[x][y]=-1;
+			*player=1;
+			c=0;
+		}
+		else
+			c=2;
+	}
+}
+void disply(int x, int y, int arr[][3])
+{
+	for(int i=0; i<y; i++)
+	{
+		for(int j=0; j<x; j++)
+		{
+			if((j+1)%4==0||(i+1)%4==0)
+				printf("⬜️");
+			else if(i%2&&j%2)
+			{
+				int in1=abs(i-1)%3;
+				int in2=abs(j-1)%3;
+				if(arr[in1][in2]==1)
+					printf("❌");
+				else if(arr[in1][in2]==-1)
+					printf("⭕️");
+				else
+					printf("  ");
+			}
+			else
+				printf("  ");
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+void check(int arr[][3], int *c)
+{
+	int s;
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(abs(s)==3)
+		{
+			*c=0;
+			return;
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(abs(s)==3)
+		{
+			*c=0;
+			return;
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(abs(s)==3)
+	{
+		*c=0;
+		return;
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(abs(s)==3)
+	{
+		*c=0;
+		return;
+	}
+	s=0;
+	for(int i=0; i<3; i++)//KIRITRISH IMKONIYATI BOR YO'QLIGINI TEKSHIRADI
+		for(int j=0; j<3; j++)
+			if(!arr[i][j])
+				s++;
+	if(!s)
+	{
+		*c=5;
+		return;
+	}
+}
+void autoIn1(int arr[][3])
+{
+	int s;
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(s==-2)
+		{
+			for(int j=0; j<3; j++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(s==-2)
+		{
+			for(int i=0; i<3; i++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(s==-2)
+	{
+		for(int i=0; i<3; i++)
+			if(arr[i][i]==0)
+			{
+				arr[i][i]=-1;
+				return;
+			}
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(s==-2)
+	{
+		for(int i=0, j=2; i<3; j--, i++)
+			if(arr[i][j]==0)
+			{
+				arr[i][j]=-1;
+				return;
+			}
+	}
+	
+//AGAR BIR YURISHDA G'ALABA QOZONISH IMKONI YO'Q BO'LSA, RAQIBINING G'ALABASI IMKONIYATINI TEKSHIRADI
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(s==2)
+		{
+			for(int j=0; j<3; j++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(s==2)
+		{
+			for(int i=0; i<3; i++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(s==2)
+	{
+		for(int i=0; i<3; i++)
+			if(arr[i][i]==0)
+			{
+				arr[i][i]=-1;
+				return;
+			}
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(s==2)
+	{
+		for(int i=0, j=2; i<3; j--, i++)
+			if(arr[i][j]==0)
+			{
+				arr[i][j]=-1;
+				return;
+			}
+	}
+//	BITTA BELGISI BO'LGAN VA QARSHI JAMOA BELGISI MAVJUD BO'LMAGAN MANZILGA BELGI KIRITISH
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(s==-1)
+		{
+			for(int j=0; j<3; j++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(s==-1)
+		{
+			for(int i=0; i<3; i++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(s==-1)
+	{
+		for(int i=0; i<3; i++)
+			if(arr[i][i]==0)
+			{
+				arr[i][i]=-1;
+				return;
+			}
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(s==-1)
+	{
+		for(int i=0, j=2; i<3; j--, i++)
+			if(arr[i][j]==0)
+			{
+				arr[i][j]=-1;
+				return;
+			}
+	}
+// 	AGAR HALI BELGILAR KIRITILMAGAN BO'LSA MARKAZNI EGALLASHGA HARAKAT QILIB KO'RILADI YOKI RANDOM HOLATDA JOYLASHUV TANLANADI
+	if(arr[1][1]==0)
+	{
+		arr[1][1]=-1;
+	}
+	else
+	{
+		s=1;
+		while(s)
+		{
+			srand(time(0));
+			int m=rand()%3, n=rand()%3;
+			if(arr[m][n]==0)
+			{
+				arr[m][n]=-1;
+				s=0;
+			}
+		}
+	}
+}//	SODDAROQ DASTUR 1 -DARAJALI
+void autoIn2(int arr[][3])
+{
+	int s;
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(s==-2)
+		{
+			for(int j=0; j<3; j++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(s==-2)
+		{
+			for(int i=0; i<3; i++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(s==-2)
+	{
+		for(int i=0; i<3; i++)
+			if(arr[i][i]==0)
+			{
+				arr[i][i]=-1;
+				return;
+			}
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(s==-2)
+	{
+		for(int i=0, j=2; i<3; j--, i++)
+			if(arr[i][j]==0)
+			{
+				arr[i][j]=-1;
+				return;
+			}
+	}
+	
+//AGAR BIR YURISHDA G'ALABA QOZONISH IMKONI YO'Q BO'LSA, RAQIBINING G'ALABASI IMKONIYATINI TEKSHIRADI
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(s==2)
+		{
+			for(int j=0; j<3; j++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(s==2)
+		{
+			for(int i=0; i<3; i++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(s==2)
+	{
+		for(int i=0; i<3; i++)
+			if(arr[i][i]==0)
+			{
+				arr[i][i]=-1;
+				return;
+			}
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(s==2)
+	{
+		for(int i=0, j=2; i<3; j--, i++)
+			if(arr[i][j]==0)
+			{
+				arr[i][j]=-1;
+				return;
+			}
+	}
+//	BITTA BELGISI BO'LGAN VA QARSHI JAMOA BELGISI MAVJUD BO'LMAGAN MANZILGA BELGI KIRITISH
+	for(int i=0; i<3; i++)//SATR BO'YCHA TEKSHIRADI
+	{	
+		s=0;
+		for(int j=0; j<3; j++)
+			s+=arr[i][j];
+		if(s==-1)
+		{
+			for(int j=0; j<3; j++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	for(int j=0; j<3; j++)//USTUN BO'YICHA TEKSHIRADI
+	{	
+		s=0;
+		for(int i=0; i<3; i++)
+			s+=arr[i][j];
+		if(s==-1)
+		{
+			for(int i=0; i<3; i++)
+				if(arr[i][j]==0)
+				{
+					arr[i][j]=-1;
+					return;
+				}
+		}
+	}
+	s=0;
+	for(int i=0; i<3; i++)//BOSH DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][i];
+	if(s==-1)
+	{
+		for(int i=0; i<3; i++)
+			if(arr[i][i]==0)
+			{
+				arr[i][i]=-1;
+				return;
+			}
+	}
+	s=0;
+	for(int i=0, j=2; i<3; j--, i++)//YORDAMCHI DIOGONAL BO'YICHA TEKSHIRADI
+		s+=arr[i][j];
+	if(s==-1)
+	{
+		for(int i=0, j=2; i<3; j--, i++)
+			if(arr[i][j]==0)
+			{
+				arr[i][j]=-1;
+				return;
+			}
+	}
+// AGAR HALI BELGILAR KIRITILMAGAN BO'LSA MARKAZNI EGALLASHGA HARAKAT QILIB KO'RILADI YOKI RANDOM HOLATDA JOYLASHUV TANLANADI
+	if(arr[1][1]==0)
+	{
+		arr[1][1]=-1;
+	}
+	else
+	{
+		s=1;
+		while(s)
+		{	
+			srand(time(0));
+			while(arr[0][0]==0||arr[0][2]==0||arr[2][0]==0||arr[2][2]==0)
+			{
+				int burchaklar=rand()%4;
+				switch(burchaklar)
+				{
+					case 0: arr[0][0]=-1;return;
+					case 1: arr[0][2]=-1;return;
+					case 2: arr[2][0]=-1;return;
+					case 3: arr[2][2]=-1;return;
+				}
+			}
+			int m=rand()%3, n=rand()%3;
+			if(arr[m][n]==0)
+			{
+				arr[m][n]=-1;
+				s=0;
+			}
+		}
+	}
+}//	MURAKKABROQ DASTUR 2 -DARAJALI
+void muallif()
+{
+	char arr[25];
+	for(int i=0; i<25; i++)
+		arr[i]='\n';
+	for(int i=0; i<25; i++)
+	{
+		system("clear");
+		printf("  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Tic Tac Toe~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n {\t\t\t\t\t\t\t\t\t\t\t\t\t   \t\t\t\t\t\t\t\t\t}\n");
+		for(int j=20-i; 0<j;j--)  
+			printf("%c", arr[j]);
+		if(i&&i<21)
+			printf("       Assalomu alaykum. Meni ismim Asilxo'ja. Hozirda Najot ta'lim o'quv markazida\n");
+		if(i>1&&i<22)
+			printf("     \"Bootcamp\" yo'nalishining 5 -guruhida \"Foundation\" bosqichida tahsil olmoqdaman!\n");
+		if(i>2&&i<23)
+			printf("   Dasturda kuzatilgan xato va kamchiliklar bo'lsa, xabar berishingizni so'rab qolardim.\n");
+		if(i>3&&i<24)
+			printf("          O'yin davomida sizga omad tilab qolaman! E'tibor uchun katta Rahmat!\n");
+		for(int j=4; j<i;j++)  
+			printf("%c", arr[j]);
+		printf(" {\t\t\t\t\t\t\t\t\t\t\t\t\t   \t\t\t\t\t\t\t\t\t}\n  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Muqimjon Mamadaliyev ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		sleep(1);
+	}
+	return;
+}
