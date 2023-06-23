@@ -16,4 +16,4 @@ class Solution:
                 ans -= Rum_nume[string[i]]
             else:
                 ans += Rum_nume[string[i]]
-        return ans
+        return f"{ans}"
